@@ -1,6 +1,7 @@
 Função x método -  transforma input em output
 ---------------------------------------------
-
+- Argumentos:  valores específicos, funções fazxem os cálculos sobre esses valores específicos
+- 
 \-> para ver métodos acessíveis ao objeto, digita object. (com ponto) 
 
 \-> saber o qeu o método indicado faz: help(object.method) -> def é palavra para criar funçao e método.
