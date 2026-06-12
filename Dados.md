@@ -55,3 +55,26 @@ O nome do produto ("Camiseta Preta"), o preço (R$ 59,90), o estoque (15 unidade
 
 
 ELT faz transformação no data warehouse, só possível em dat awarehouses *de cloud*. Em outro local e forma, custo e infraestrutura seriam custosos e lentos.
+
+---
+## Databricks
+* *Dashboard*: = um painel com informações e indicadores
+* UC Unity Catalog: gerencia governançá e os dados/objetos de dado do meu workspace
+*   Workspace: onde eu faço meu trabalho. Tudo está dentro do workspace.
+  * unity metastore: contém os metadados dos objetos e acessos // pode conter varios catalogs 
+    * *Catalog*: schemas + objetos de dados 
+        * container lógico // pode conter multiplos schemas // lhnautical, no nosso projeto
+      * *Schema* = database base de dados / dbo, no nosso projeto
+        *   OBJETOS DE DADOS DO SCHEMA:
+        * table - objeto de dados tabulares
+        * view - resultado de uma querry de tabelas, só read-only // db_lh_vw
+        * volume - objeto de armazenar dados NÃO-tabulares para os governar/organizar
+          * semi e não estruturados -- Ex.: parquet, xlsx, CSV (que é na verdade arquivo de texto)
+          * só usados como path-based dataa ccess; não pode ser usado como table location
+          * permite acessar, governar, armaenar  e organizar arquivos  que não são manejaveis em em um banco de dados
+          * mais usado para guardar os dados raw, que podem depois ser convertidos para tabela ou suados em ML e IA
+        * função - salvo funçào que retornará valor ou set de linhas // criar funções SQL e salvar num catalog ou shcema e compartilhar com pessoas da minha equipe
+        * models   
+Teste
+teste
+
