@@ -19,7 +19,7 @@ create table raw.jaffle_shop.orders
 
 - O campo é uma coisa ou uma propriedade?
   - coisa - entidade - row - record/registro
-  - propriedade - atributo - coluna
+  - propriedade - atributo - coluna - field/campo
  
 - *Banco de dados é difernete de planilha excel*? Sim, pois tem>
  - escalabildiade - databases aguentam milhoes de linhas, spreadsheets aguentam só centenas
