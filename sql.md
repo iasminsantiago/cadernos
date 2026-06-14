@@ -18,7 +18,7 @@ create table raw.jaffle_shop.orders
 ---
 
 - O campo é uma coisa ou uma propriedade?
-  - coisa - entidade - row
+  - coisa - entidade - row - record/registro
   - propriedade - atributo - coluna
  
 - *Banco de dados é difernete de planilha excel*? Sim, pois tem>
