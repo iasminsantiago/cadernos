@@ -103,3 +103,8 @@ ELT faz transformação no data warehouse, só possível em dat awarehouses *de 
 * objetos que eu não tenho acesso NÃO aparecem para mim. Ex. não tenho acesso ao bdo, então clico em lhnautical e a pasta tá vazia
 
 * Delta lake - API/protocolo pra ler e escrever files na nuvem
+
+
+- The Control Plane "controls" what happens in the platform, and the Compute Plane "computes" the tasks.
+  - The Control Plane is the "brains" of the platform, controlling all processing and creating clusters.
+  - The Compute Plane is the "muscles" of the platform, and houses all of the physical entities of the platform.
