@@ -1,3 +1,5 @@
+# SQL
+
 Tem que separar uma querry de outra com ;
 
 ```sql
@@ -13,3 +15,14 @@ create table raw.jaffle_shop.orders
 
 // veja que são 2   uerries diferentes ;)
 ```
+---
+
+- O campo é uma coisa ou uma propriedade?
+  - coisa - entidade - row
+  - propriedade - atributo - coluna
+ 
+- *Banco de dados é difernete de planilha excel*? Sim, pois tem>
+ - escalabildiade - databases aguentam milhoes de linhas, spreadsheets aguentam só centenas
+ - concorrencia - vários usuários podem usar e editar databases simultaneamente
+ - automaçao - databses sáo feitas para serem acessadas com programaçáo -- por aplicaçoes e pipelines, como databricks e dbt
+ - ja spreadsheets sáo projetadas para analise manual e rápida, permite poucas pessoas a usando/ feitas para serem acessadas manualmente, não por aplicaçoes
