@@ -56,6 +56,13 @@ O nome do produto ("Camiseta Preta"), o preço (R$ 59,90), o estoque (15 unidade
 
 ELT faz transformação no data warehouse, só possível em dat awarehouses *de cloud*. Em outro local e forma, custo e infraestrutura seriam custosos e lentos.
 
+
+---
+## MEDALLION ARCHITECTURE
+- Progressively melhora estrutura e qualidade dos dados
+BRONZE - Raw data - armazenamento fundamental // adiciona-se colunas de metadados para 
+SILVER - Cleaned - limpo, transformado e enriquecido - dataset refinado e pronto para análise
+GOLD - Curated - curado, agregado, alta qualidade  - otimizado apra relatório e advanced analysis - a mais usada em apps de BI
 ---
 ## Databricks
 * *Dashboard*: = um painel com informações e indicadores
@@ -103,6 +110,14 @@ ELT faz transformação no data warehouse, só possível em dat awarehouses *de 
 * objetos que eu não tenho acesso NÃO aparecem para mim. Ex. não tenho acesso ao bdo, então clico em lhnautical e a pasta tá vazia
 
 * Delta lake - API/protocolo pra ler e escrever files na nuvem
+  * ACID - ou 100% certo, ou faz nada; evita arquivos corrompidos se gravação falhar
+  * Time Travel - histórico de todas as alteraçoes // log de transações, que posso consultar ex.: como estavam os dados na sexta-feira passada -- bom para auditoria e corrigir erros
+  * Schema enforcement - dados novos só entram no scehmaa tual se eu permitir a mudança
+  * Suporta streaming (dados que chegam em tempo real) e batch (dados que chegam em lote) AO mesmo tempo, na mesma tabela
+  * carrega os arquivos externos ocmo DELTA TABLES, suportando arquitetura lake house.
+    * DELTA TABELES armazenam os dados externos num diretorio de pastas como arquivo parquet,e  cria delta logs deles (JSON) também.
+    * DELTA LOGS mantém registro de toda transaçao/mudança (todo INSERT, DELETE E UPDATE) nos arquivos parquet e versões das tabelas externas que ingerimos pro DTBKS 
+
 
 
 - The Control Plane "controls" what happens in the platform, and the Compute Plane "computes" the tasks.
