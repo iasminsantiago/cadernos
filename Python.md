@@ -1,3 +1,9 @@
+# Python
+
+
+- scripts podem ser salvos, terminals não. COm isso, posso reusar código script de python: arquivos que terminam com .py. ABro, clcio run e não precisei escrever novamente.
+- 
+---
 Função x método -  transforma input em output
 ---------------------------------------------
 - Argumentos:  valores específicos, funções fazxem os cálculos sobre esses valores específicos
@@ -10,7 +16,6 @@ Função x método -  transforma input em output
 
 \-- Método: função que mora dentro de classe // o objeto será seu primeiro argumento method\name(self): o objeto é passado pro parâmetro self // construida num objeto, designado para funcionar só pro objeto // objeto.Metodo(parametros)
 
- 
 
 - só prcisa do __init__ quando quero que objeto NASÇA com alguma informação ou estado inicial (valor inicial pra informação)
 
@@ -71,6 +76,11 @@ in
   - testar se elemento ta na lista:   "waffles" in breakfast_list = False
 
 
+
+## Listas
+- como profissionais de dados,trabalharemos com vários pontos de dados. Ao invés de criar uma var para CADA ponto/valor coletado, armazenamos todos os valores numa python list
+
+- 
 ## Dicionários
 {"x":"y", "":""}
 - sua a chave para acessar o valor, não pode acessar/pedir/pesquisar pelo valor
