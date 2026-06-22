@@ -57,3 +57,17 @@
 - The Control Plane "controls" what happens in the platform, and the Compute Plane "computes" the tasks.
   - The Control Plane is the "brains" of the platform, controlling all processing and creating clusters.
   - The Compute Plane is the "muscles" of the platform, and houses all of the physical entities of the platform.
+
+
+- Camadas de dados no Databricks
+  - Antes de entrar na bronze, posso remover PIIs - personally identifiable information ao ingerir pro delta lake
+  - Bronze / raw: Dados não são exlcuidos da raw para serem usados em futuros projetos; tem colunas de metadata com load time, hora, ID do processo etc.
+      - ingerir dados brutos / aw reduz exposição a bugs de sistema ou logica de processos. Com raw data, posso sempre ter acesso ao estado inicial.
+  - Silver: filtra, limpa, join e enriquece, define estrutura de dados e reenforça schema 
+      - dados ja viram unica fonte de verdade aqui (single source of truth) -- erros corrigidos, dados para business, aplica regras de negocio
+      - ex.: tabelas com dados de de entidades unicas como clientes, transacoes etc
+  - Gold: dados limpos e de alta qualidade, para consumo, agrega ao negocio dos dados silver, entregue pros processos mais downstream da empresa;
+      - tem agregacoes na camada silver, para negocios usar
+      - as tabelas podem ser guardadas em formato delta, para usarmos spark jobs ou consultas sql
+      - Como uNITIY catalog UC tem suporte para delta parquet etc, as tabelas podem ser lidas por outros app
+
