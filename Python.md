@@ -1,10 +1,41 @@
 # Python
+Interpretada, o python runtime lê linha por linha na hora ao invés de criar um arquivo e  depois ler tudo
+as 3 >>> significa que estamos denro de um runtime de python:
+<img width="48" height="61" alt="image" src="https://github.com/user-attachments/assets/80290bc9-57d3-424c-a78f-23f453b27e73" />
 
 
 - scripts podem ser salvos, terminals não. COm isso, posso reusar código script de python: arquivos que terminam com .py. ABro, clcio run e não precisei escrever novamente.
+- memória do valor de variáveis não é salvo se fechar runtime, esse dado não "persiste"
 - 
 ---
-Função x método -  transforma input em output
+Tipos de dados
+- text: string
+  - str.capitalziae(), upper(), lower() ou casefold(), split(separador, maxplit) -> list, join(iterable) une elemnto de list em uma str, count(value, start,end) retorna quantidade de vezes que valor apareceu num intervalo numa string -> int, replace(oldvalue, newvalue, count) substitui um valor por outro na quantidade definida numa string -> str
+     
+- numeric - int, float, complex
+- seqeunce - list [], tuple, range
+- - mapping - dict {}
+  - set - set, frozenset
+  - boolean - bool
+  - binary - bytes, bytearray, memoryview
+  - none - NoneType (quando temos var mas não atribuimos valora ela: friends_birthday = NoneType (não sei valora gora mas usarei/settarei var depois)
+Função x método -  transforma input em output -> 
+
+
+```
+primeira_pessoa = {
+ "name": "Juliana",
+ "age": 31
+}
+
+segunda_pessoa = {
+"name": "Karla",
+ äge":26
+}
+
+print(primeira_pessoa.get("name")) # se name estivre vazio, retorna nada
+print(segunda_pesssoa["name]) # se name estiver vazio, dá erro
+```
 ---------------------------------------------
 - Argumentos:  valores específicos, funções fazxem os cálculos sobre esses valores específicos
 - 
@@ -202,5 +233,6 @@ Quando se deseja uma visão mais completa do desempenho do modelo.
 ### References
 
 Introduction to Python for Data Science and Data Engineering -  Databricks
-DIO - Bootcamp Accenture - cursos Processamento e Limpeza de Dados em Python, Automação de Processos e Análises com Python, Boas Práticas, Testes e Otimização de Código em Python
+DIO - Bootcamp Accenture - cursos Processamento e Limpeza de Dados em Python, Automação de Processos e Análises com Python, Boas Práticas, Testes e Otimização de Código em Python  
+(LIGHTHOUSE | Aula 05 - Introdução ao Python I)[https://www.youtube.com/live/dy6ypuyVH64]
 
