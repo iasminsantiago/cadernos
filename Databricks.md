@@ -3,7 +3,9 @@
 * UC Unity Catalog: gerencia governançá e os dados/objetos de dado do meu workspace
 *   notebook - querry + markdown
 *   SQL Editor - desenvolvo, testo e salvo querries
-  
+
+---
+
 *   Workspace: onde eu faço meu trabalho. Tudo está dentro do workspace.
   * unity metastore: contém os metadados dos objetos e acessos // pode conter varios catalogs 
     * *Catalog*: schemas + objetos de dados 
@@ -20,7 +22,8 @@
         * função - salvo funçào que retornará valor ou set de linhas // criar funções SQL e salvar num catalog ou shcema e compartilhar com pessoas da minha equipe
         * models
        
-          
+--- 
+
 * computers
   * serverless - qualquer tipo de task, on-demand, mais r[apido que clusters
   * all-purpose - geral, usado pros notebooks
@@ -43,8 +46,10 @@
   * CAN MANAGE - edit + modify permissoes e acessos + deletar o objeto
 * objetos que eu não tenho acesso NÃO aparecem para mim. Ex. não tenho acesso ao bdo, então clico em lhnautical e a pasta tá vazia
 
+---
+
 * Delta lake - API/protocolo pra ler e escrever files na nuvem
-  * ACID - ou 100% certo, ou faz nada; evita arquivos corrompidos se gravação falhar
+  * ACID - ou 100% certo, ou faz nada; evita arquivos corrompidos se gravação falhar - o ACID dá suporte a insert, update, delete 
   * Time Travel - histórico de todas as alteraçoes // log de transações, que posso consultar ex.: como estavam os dados na sexta-feira passada -- bom para auditoria e corrigir erros
   * Schema enforcement - dados novos só entram no scehmaa tual se eu permitir a mudança
   * Suporta streaming (dados que chegam em tempo real) e batch (dados que chegam em lote) AO mesmo tempo, na mesma tabela
@@ -52,12 +57,13 @@
     * DELTA TABELES armazenam os dados externos num diretorio de pastas como arquivo parquet,e  cria delta logs deles (JSON) também.
     * DELTA LOGS mantém registro de toda transaçao/mudança (todo INSERT, DELETE E UPDATE) nos arquivos parquet e versões das tabelas externas que ingerimos pro DTBKS 
 
-
+---
 
 - The Control Plane "controls" what happens in the platform, and the Compute Plane "computes" the tasks.
   - The Control Plane is the "brains" of the platform, controlling all processing and creating clusters.
   - The Compute Plane is the "muscles" of the platform, and houses all of the physical entities of the platform.
 
+---
 
 - Camadas de dados no Databricks
   - Antes de entrar na bronze, posso remover PIIs - personally identifiable information ao ingerir pro delta lake
@@ -70,4 +76,27 @@
       - tem agregacoes na camada silver, para negocios usar
       - as tabelas podem ser guardadas em formato delta, para usarmos spark jobs ou consultas sql
       - Como uNITIY catalog UC tem suporte para delta parquet etc, as tabelas podem ser lidas por outros app
+   
+  ---
+  
+Data importing - metodos
+- File Upload UI
+  FROM rad_files()
+  COPY INTO
 
+  ---
+
+Pipelines de ingestão de dados / DATA INGESTION PIPELINES
+- Connect - conecta fontes de dados
+- Declarative pipelines - facilita pipelines de dados 
+- Jobs - orquestraçào unificada para IA e analytics
+
+- ---
+VIEWS
+**<img width="566" height="192" alt="image" src="https://github.com/user-attachments/assets/12305e56-d41f-4427-93d1-4e59a9afa6ba" />
+**
+---
+QUERRY TOOLS
+- Photon - maquina vetorizada , deixa chamadas SQL mais rápidas e reduz meu custo por workload; é o padrão, então está sempre ativo
+- Predictive IO- acelera scans seletos em querries SQL que eu fizer. Acelera processos ligados a querreis SQL.
+- IWM - Inteligent workload management - melhora o serverless no seu processamento de grandes querries ou quantidade de querries, ajuda o workload a ter as resources necessarias mais rapido. 
