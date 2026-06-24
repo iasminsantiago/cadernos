@@ -96,6 +96,13 @@ VIEWS
 **<img width="566" height="192" alt="image" src="https://github.com/user-attachments/assets/12305e56-d41f-4427-93d1-4e59a9afa6ba" />
 **
 ---
+
+DATABRICKS SQL
+- Otimizações preditivas do DBCKS SQL:
+  - Inteliigente workload management: ML aplica, direciona querries pras machines corretas,escala up ou down o cluster preditivamente - antes de precisar, prioriza certas querries pra aumentar eficiencia e minimiza latencia
+  - dautomatic data layout - dtcs aprende do meu workload pra escolher automaticamente o tamanho de arquivo correto  pra meu banco de dados
+  - indezless indexing - 
+  -   
 QUERRY TOOLS
 - Photon - maquina vetorizada , deixa chamadas SQL mais rápidas e reduz meu custo por workload; é o padrão, então está sempre ativo
 - Predictive IO- acelera scans seletos em querries SQL que eu fizer. Acelera processos ligados a querreis SQL.
