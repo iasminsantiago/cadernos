@@ -1,4 +1,14 @@
 ## Databricks
+---
+
+Nivel + alto do databricks - account administrator, ele pode criar e adc gente ao workspace, governar acessos e monitorara a conta toda e coisas/workspaces dela e billings.
+No account console, accounts.cloud.databricks.com
+- workspaces - da pra ver todos os woekspaces, onde os datasets estao armazenados no lakehouse
+- data  - gerir data catalogs usando o unity catalog
+- users e groups - local unificado pra gerenciar acesso sdos users adicionados a minha conta
+- acc admin tem permissoes pra conta inteira e configuracpes back-end como revursos etc; workspace admin, mesmo sendo user externo, tem permissao pras operacoes do workspace especifico
+
+- 
 * *Dashboard*: = um painel com informações e indicadores
 * UC Unity Catalog: gerencia governançá e os dados/objetos de dado do meu workspace
 *   notebook - querry + markdown
@@ -47,6 +57,12 @@
 * objetos que eu não tenho acesso NÃO aparecem para mim. Ex. não tenho acesso ao bdo, então clico em lhnautical e a pasta tá vazia
 
 ---
+
+Delta - formato de dado. Traz performance de datawarehouse ao lakehouse. 
+- coleção de:  arquivo parquet + metadados + log de transação JSON -> dados se comportarão como uma tabela mas formato de arquivo aberto no lakehouse, ACID, permite datasets  batch e streaming, tudo num so lugar.
+- após dados serem stored nesse lakehouse, precisaremos gerenciar seu acesso e governança, no unity catalog.
+- <img width="1002" height="468" alt="image" src="https://github.com/user-attachments/assets/368aafb5-cd2d-4430-9f0c-b791e3d2f7c2" />
+
 
 * Delta lake - API/protocolo pra ler e escrever files na nuvem
   * ACID - ou 100% certo, ou faz nada; evita arquivos corrompidos se gravação falhar - o ACID dá suporte a insert, update, delete 
