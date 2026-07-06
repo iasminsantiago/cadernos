@@ -16,7 +16,18 @@ No account console, accounts.cloud.databricks.com
 
 ---
 
-*   Workspace: onde eu faço meu trabalho. Tudo está dentro do workspace.
+Catalog - pra adicionar data
+- fomos em catalog - create - cretae or modify table - seleciona o arquivo - o serverless que foi escolhido vai ler - confirma o catalogo e schema, create table
+---
+SQL Editor - onde faço querries. Se não salvar, fecha  esó. Se salvar, ela fica no workspace, não no catalog pois é querry.  Os dados é que ficam no catalog.<img width="810" height="493" alt="image" src="https://github.com/user-attachments/assets/6c2c144e-3453-435a-a22f-70ddd076ca6f" />
+
+
+
+--- 
+*   Workspace: onde eu faço meu trabalho. Tudo está dentro do workspace. ONde guardo notebooks, querries e dashboard em que estou trabalhando.
+  * fui em create - notebook. Escolhi o cluster que criei first_cluster, indo no icone de um circulo entre run e schedule.
+
+  * 
   * unity metastore: contém os metadados dos objetos e acessos // pode conter varios catalogs 
     * *Catalog*: schemas + objetos de dados 
         * container lógico // pode conter multiplos schemas // lhnautical, no nosso projeto
@@ -39,7 +50,18 @@ No account console, accounts.cloud.databricks.com
   * all-purpose - geral, usado pros notebooks
   * job compute - workflows automatizados
   * SQL warehouse -  querries SQL sobre os data objects e exploraçao de dados
- 
+
+ ---
+ * Clusters
+ * - cria indo na aba compute, create personal compute, ai escolhe versao do runtime, quanto tempo inativo pra terminar etc
+- processa dados e analises
+- é coleção de processos que databricks tem (notebooks, clusters e jobs)
+- Tipos: classico (eu manejo, mas inicia lentamente pois é criado do zero), serverless (inicio mais rapido; databricks aprende e ajusta e meu perfil de uso)
+- Nodes: dependerá do workload que tenho -> single-node (pra poucos dados, cluster com so 1 maquina ou so um driver node, roda node, pra exploracao de dados, mais simples como pandas, seaborn e dplyr mas consegue rodar spark; mais barato), multi-node(tem 1 driver node, assim como o single-node, mas ele tem work nodes conectados a ele; usa spartk pra distribuir trabalho entre eles; melhor pra dados grandes)
+- runtime: single-ndoe e multi-node, ambos tem o runtime instalado. INstalado em cada cluster do databricks. O runtime tem varios componentes: spark otimizado, a engine photon (pra querries sql rapidas) e varias bibliotecas e apis. Um multi-noe e seus runtime: <img width="461" height="282" alt="image" src="https://github.com/user-attachments/assets/4c03695a-24c7-4ad0-a70d-08dcc9843334" />
+
+
+ ---
     
 * Principals
   * user - humano que acessa, representado pelo seu e-mail
