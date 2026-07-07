@@ -8,7 +8,57 @@ No account console, accounts.cloud.databricks.com
 - users e groups - local unificado pra gerenciar acesso sdos users adicionados a minha conta
 - acc admin tem permissoes pra conta inteira e configuracpes back-end como revursos etc; workspace admin, mesmo sendo user externo, tem permissao pras operacoes do workspace especifico
 
-- 
+---
+
+Unity Catalog centrally manages security, audit, and management for what?
+
+Data and AI assets
+
+Why this is correct:
+Unity Catalog is the comprehensive governance solution for Lakehouse data and AI. It provides centralized access control, auditing, lineage, and data discovery capabilities across the entire Databricks account.
+
+Specifically, it manages security and management for:
+
+Structured Data: Catalogs, schemas (databases), tables, and views.
+
+Unstructured Data: Volumes (for files like CSVs, images, PDFs).
+
+AI Assets: Models (via MLflow) and Features (for machine learning).
+---
+
+What object sits at the top level of the data access hierarchy in Unity Catalog?
+
+The Metastore is the top-level container of objects. It stores all the metadata for data assets (like catalogs, schemas, and tables) and permissions. A metastore can be assigned to multiple Databricks workspaces.
+
+The complete three-tier namespace hierarchy under the metastore flows as follows:
+
+Metastore (Top level / Root)
+
+Catalog (First layer of the namespace)
+
+Schema / Database (Second layer of the namespace)
+
+Table / View / Volume (Bottom layer containing the actual data)
+
+
+Why the other options are incorrect:
+Workspace: A workspace is an environment for accessing Databricks assets (like notebooks and clusters), but it is not a data object inside the Unity Catalog governance hierarchy itself. Instead, multiple workspaces link up to a Metastore.
+
+---
+
+What powers the Databricks Marketplace's ability to share data?
+Delta Sharing
+
+Why this is correct:
+The Databricks Marketplace is powered by Delta Sharing, which is an open-source protocol developed by Databricks for secure data sharing.
+
+Because it relies on Delta Sharing, data providers can safely share data, models, notebooks, and apps across different clouds, regions, and data platforms without requiring recipients to also be on Databricks.
+
+Why the other options are incorrect:
+Unity Catalog Metastore: While Unity Catalog is used to manage the governance, permissions, and auditing of the shared data, the underlying technology that handles the actual sharing protocol and cross-platform distribution is Delta Sharing.
+
+---
+
 * *Dashboard*: = um painel com informações e indicadores
 * UC Unity Catalog: gerencia governançá e os dados/objetos de dado do meu workspace
 *   notebook - querry + markdown
