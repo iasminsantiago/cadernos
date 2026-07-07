@@ -1,3 +1,28 @@
+In dbt, models are your transformed tables created by SQL files inside your project, whereas sources are the raw, pre-existing tables.
+```
+sources:
+  - name: salesforce
+    tables:
+      - name: accounts
+        columns:
+          - name: account_id
+            data_tests:
+              - unique
+```
+What data tests will be run in your project?
+
+A unique test will be run on the accounts source table.
+salesforce is declared as the source name (representing the raw database or schema where the data lands).
+
+accounts is declared under tables:, meaning it represents a specific source table coming from Salesforce.
+
+The unique test is nested directly under the account_id column of that specific source table.
+
+When you run dbt test (or dbt source test), dbt will execute a query against the raw accounts source table in your data warehouse to verify that every value in the account_id column is unique.
+
+---
+
+
 ## YAML
 models:
   name do modelo:
@@ -128,6 +153,7 @@ mesmo se fosse jaffle_shop_prod, algo asism, a macro _source_, no dbt, é design
 - table_name: References the - name: property of the table block (orders).
 
 ## Testes - ajuda pessoas a confiarem in my data
+- Teste sources for data integrity, teste models for transformation integrity
 dbt test aplica testes que eu faria manualmente, programaticamente, aí da pra escalar pra  projetos grandes
 - se os testes da source gfalham, é nbom ppois indicam um problema na ingestao, nao no dbt. Se nao testar a source, terá qie analisar que etapa tem rpoblema depois
 ### generic test
@@ -144,3 +170,63 @@ dbt test aplica testes que eu faria manualmente, programaticamente, aí da pra e
 - definidos num arquivo de querry sql, num arquivo sql separado, colcoado na pasta tests
 - ex.- teste pra assegurar que total revenue, do modelo, nunca é numero negativo
 - indicado pra validar regras de negocio complexas, que nao podem er validadas por teste general
+
+---
+Assume your project only has models and sources and data tests configured on models and sources. (i.e. there are not snapshots or seeds -- these are beyond the scope of this quiz)
+
+How does the dbt build command work?
+dbt build will first test your sources, then materialize and test each model in DAG order.
+How dbt build works under the hood
+The dbt build command is designed to be resource-efficient and to catch data quality issues as early as possible. It executes your project in DAG (Directed Acyclic Graph) order, meaning it follows the strict parent-to-child lineage of your data pipeline from left to right.
+
+The execution sequence follows this logic:
+
+Source Testing: Sources are the starting point of your DAG. Before wasting compute resources transforming raw data, dbt build runs any data tests or freshness checks configured on your sources.
+
+Step-by-Step Materialization & Testing: Once the sources pass, dbt moves down the graph. For each model, it will materialize the model (create the table/view) and then immediately run its tests before moving on to any downstream models that depend on it.
+
+The "Fail-Fast" Benefit
+The main advantage of dbt build over running dbt run && dbt test sequentially is its fail-fast nature. If a staging model fails its unique test, dbt build will automatically skip all downstream marts and reports that rely on that model. This prevents bad data from propagating through your warehouse and saves compute costs.
+
+Why the other options are incorrect:
+a and c are incorrect: These options describe a linear approach (doing all of one action, then all of another). If dbt built all models before testing them (as in option c), a failure in a raw source or early staging model wouldn't stop bad data from being processed by all subsequent downstream models.
+
+---
+
+Which command will run data tests only on sources?
+
+a. dbt test --select source:*
+Why this is correct:
+In dbt, you use the --select (or -s) flag to filter which nodes you want to execute. The syntax source:* uses a selection method descriptor that tells dbt to select all configured sources in the project.
+
+Running dbt test --select source:* instructs dbt to look at your entire Directed Acyclic Graph (DAG), isolate only the source nodes, and execute the data tests attached to them.
+
+Alternative Shortcut:
+You can also use the shorthand command:
+
+Bash
+dbt test --select path.to.source_file.yml
+...but to select all sources across the entire project globally, source:* is the standard notation.
+
+---
+
+you are working in development and run dbt build. Your entire project materializes and tests successfully. You have only accepted values tests on your sources and models.
+
+On Tuesday, you log back in and run dbt run and your models all run. You then run dbt test and find that 5 tests failed.
+
+What is most likely the reason for the tests failing?
+A new value was introduced on a column you were testing.
+The scenario states that you are specifically using accepted values tests. An accepted values test ensures that all data within a specific column matches a predefined list of allowed values (e.g., if a status column should only contain 'ordered', 'shipped', or 'delivered').
+
+Here is why c perfectly explains the timeline:
+
+On Monday: Your source data only contained approved values, so dbt build passed.
+
+On Tuesday: You ran dbt run, which successfully rebuilt your models. This means your SQL code had zero compilation or syntax errors.
+
+The Failure: When you ran dbt test, it failed because the underlying raw data in your warehouse changed between Monday and Tuesday—a new, unexpected value (e.g., 'returned' or a typo like 'shpped') was introduced into the source data, causing the accepted values test to trigger a failure.
+
+Why the other options are incorrect:
+a is incorrect: If there was a compilation error in your SQL, your models would have failed during the dbt run step before you even got to dbt test.
+
+b is incorrect: If a column name in a source had changed, the dbt run step would have failed with a "column not found" database error when trying to build the staging models.
