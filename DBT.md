@@ -1,4 +1,6 @@
 - Todos os schemas dev sao separados, ja schema prod é a fonte unica de verdade em que o BI é construido. Quando mergeamos, ai sim meu trablho da branch sera incluido na run de producao.
+- dbt cloud tem o dbt deploy, um orquestrador. Ja o dbt core precisa ser integrado a um orquestardor externo, como o workflows do databricks.
+
 
 Deployment in dbt   
 (or running dbt in production) is the process of running dbt on a schedule in a deployment environment. The deployment environment will typically run from the default branch (i.e., main, master) and use a dedicated deployment schema (e.g., dbt_prod). The models built in deployment are then used to power dashboards, reporting, and other key business decision-making processes.
