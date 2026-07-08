@@ -1,8 +1,11 @@
-Todos os schemas dev sao separados, ja schema prod é a fonte unica de verdade em que o BI é construido. Quando mergeamos, ai sim meu trablho da branch sera incluido na run de producao.
+- Todos os schemas dev sao separados, ja schema prod é a fonte unica de verdade em que o BI é construido. Quando mergeamos, ai sim meu trablho da branch sera incluido na run de producao.
 
-Deployment in dbt (or running dbt in production) is the process of running dbt on a schedule in a deployment environment. The deployment environment will typically run from the default branch (i.e., main, master) and use a dedicated deployment schema (e.g., dbt_prod). The models built in deployment are then used to power dashboards, reporting, and other key business decision-making processes.
+Deployment in dbt   
+(or running dbt in production) is the process of running dbt on a schedule in a deployment environment. The deployment environment will typically run from the default branch (i.e., main, master) and use a dedicated deployment schema (e.g., dbt_prod). The models built in deployment are then used to power dashboards, reporting, and other key business decision-making processes.
 
-Development in dbt is the process of building, refactoring, and organizing different files in your dbt project. This is done in a development environment using a development schema (dbt_jsmith) and typically on a non-default branch (i.e. feature/customers-model, fix/date-spine-issue). After making the appropriate changes, the development branch is merged to main/master so that those changes can be used in deployment.
+Development in dbt   
+is the process of building, refactoring, and organizing different files in your dbt project. This is done in a development environment using a development schema (dbt_jsmith) and typically on a non-default branch (i.e. feature/customers-model, fix/date-spine-issue). After making the appropriate changes, the development branch is merged to main/master so that those changes can be used in deployment.
+
 
 How do you indicate a deployment environment as a production environment?
 Select production in the deployment environment settings.
@@ -35,6 +38,7 @@ Why the other options are incorrect:
 
 
 ---
+
 What is the function of a job in dbt?
 the execution of dbt commands in deployment environments.
 What is a dbt Job?
@@ -46,15 +50,24 @@ Why the other options are incorrect:
 a is incorrect: Automated jobs do not run in development environments. Development environments are strictly interactive playgrounds for data analysts/engineers to build and test code manually.
 
 
-Conversation with Gemini
+Scheduling a job in dbt
+Scheduling of future jobs can be configured in dbt on the Jobs page.
+You can select the deployment environment that you created before or a different environment if needed.
+Commands: A single job can run multiple dbt commands. For example, you can run dbt run and dbt test back to back on a schedule. You don't need to configure these as separate jobs.
+Triggers: This section is where the schedule can be set for the particular job.
+After a job has been created, you can manually start the job by selecting Run Now
+Reviewing Jobs
+The results of a particular job run can be reviewed as the job completes and over time.
+The logs for each command can be reviewed.
+If documentation was generated, this can be viewed.
+If dbt source freshness was run, the results can also be viewed at the end of a job.
+
+
 Consider this yaml file.
-
-
 
 models/staging/jaffle_shop/_stg_tpch.yml
 
-
-
+´´´
 sources:
 
 - name: tpch
@@ -70,9 +83,7 @@ tables:
 - name: customers
 
 - name: order_items
-
-
-
+´´´
 
 
 
@@ -119,22 +130,6 @@ tables:
 - name: customers
 
 What is the problem with this YAML file?
-
-a.
-
-The source name is `jaffle_shop`, and should replace 'raw' in the source macro.
-
-b.
-
-The database and the schema field should be swapped.
-
-c.
-
-The schema name and database name should match.
-
-d.
-
-The source macro should also include the database name in addition to the schema name.
 
 The correct answer is b. The database and the schema field should be swapped.
 
@@ -183,22 +178,6 @@ tables:
 
 What went wrong?
 
-a.
-
-The names of tables should come before the name of the source.
-
-b.
-
-The line identifying `agg_customer_orders_all_time` is indented one tab too far.
-
-c.
-
-The database and schema names should always match.
-
-d.
-
-The "tables" key should be indented to match the indentation of `agg_customer_orders__all_time`.
-
 The correct answer is b. The line identifying agg_customer_orders_all_time is indented one tab too far.
 
 Why this causes a syntax error:
@@ -224,23 +203,6 @@ sources:
       - name: agg_customer_orders__all_time   # Fixed indentation
       - name: agg_regions_segments
 What is the purpose of declaring a source in dbt?
-
-a.
-
-Tells dbt the pre-existing data to query from the data platform.
-
-b.
-
-Tells dbt what data to copy from the data platform into dbt.
-
-c.
-
-Tells dbt what data should be stored in tables and not views.
-
-d.
-
-Tells dbt where to store your transformation results.
-
 The correct answer is a. Tells dbt the pre-existing data to query from the data platform.
 
 Why this is the purpose of sources:
@@ -286,22 +248,6 @@ identifier: jaffle_orders_information_table
 identifier: jaffle_customers_information_table
 
 How would you reference this information using the source macro?
-
-a.
-
-{{ source('jaffle_shop', 'jaffle_orders_information_table') }}
-
-b.
-
-{{ source('jaffle_shop_dataset', 'orders') }}
-
-c.
-
-{{ source('jaffle_shop', 'orders') }}
-
-d.
-
-{{ source('jaffle_shop_dataset', 'jaffle_orders_information_table') }}
 
 The correct answer is c. {{ source('jaffle_shop', 'orders') }}
 
@@ -389,23 +335,6 @@ data_tests:
 - unique
 
 What data tests will be run in your project?
-
-a.
-
-A unique test will be run on the accounts source table.
-
-b.
-
-A unique test will be run on the salesforce source table.
-
-c.
-
-A unique test will be run on the salesforce model
-
-d.
-
-A unique test will be run on the accounts model 
-
 The correct answer is a. A unique test will be run on the accounts source table.
 
 Why this is correct:
@@ -425,23 +354,6 @@ b is incorrect: salesforce is the name of the source grouping, not the name of a
 c and d are incorrect: This configuration defines a source, not a model. In dbt, models are your transformed tables created by SQL files inside your project, whereas sources are the raw, pre-existing tables.
 
 When a data test is run, what is happening under the hood in dbt?
-
-a.
-
-dbt will compile python to run against models or sources
-
-b.
-
-dbt will compile SQL to run against models or sources
-
-c.
-
-dbt will enforce a constraint on the column of the models or sources
-
-d.
-
-dbt will scan the SQL of your data models to ensure the data materializes correctly
-
 The correct answer is b. dbt will compile SQL to run against models or sources
 
 What happens under the hood?
@@ -469,23 +381,6 @@ On Monday, you are working in development and run dbt build. Your entire project
 On Tuesday, you log back in and run dbt run and your models all run. You then run dbt test and find that 5 tests failed.
 
 What is most likely the reason for the tests failing?
-
-a.
-
-The SQL in your models resulted in a compilation error.
-
-b.
-
-The column name in one of your sources that changed.
-
-c.
-
-A new value was introduced on a column you were testing.
-
-d.
-
-A column you were testing now has a duplicate.
-
 The correct answer is c. A new value was introduced on a column you were testing.
 
 Why this is the most likely reason:
@@ -535,23 +430,6 @@ tests:
 - not_null
 
 When running `dbt source freshness` what will cause a warning to be flagged?
-
-a.
-
-A duplicate in the account_id column will cause a warning.
-
-b.
-
-A null value in the account_id column will cause a warning.
-
-c.
-
-The greatest value of the _updated_at column is more than 7 days before the current time
-
-d.
-
-The greatest value of the _updated_at column is between 1 and 7 days before the current time.
-
 The correct answer is d. The greatest value of the _updated_at column is between 1 and 7 days before the current time.
 
 How dbt Source Freshness Works
@@ -575,22 +453,6 @@ a and b are incorrect: dbt source freshness completely ignores the columns: and 
 c is incorrect: If the greatest value of _updated_at is more than 7 days old, it surpasses the error_after threshold and will flag an Error, not a warning.
 
 What is the dbt best practice for testing your primary keys?
-
-a.
-
-Apply a unique test to your primary keys.
-
-b.
-
-Apply a not_null test to your primary keys.
-
-c.
-
-Apply a unique and not_null test to your primary keys.
-
-d.
-
-Apply a relationships test to your primary keys to ensure referential integrity to a foreign key.
 
 The correct answer is c. Apply a unique and not_null test to your primary keys.
 
@@ -627,19 +489,6 @@ d is incorrect: A relationships test is used to check foreign keys (ensuring a c
 Assume your project only has models and sources and data tests configured on models and sources. (i.e. there are not snapshots or seeds -- these are beyond the scope of this quiz)
 
 How does the dbt build command work?
-
-a.
-
-dbt build will first test your sources, then materialize all your models, and then test all your models.
-
-b.
-
-dbt build will first test your sources, then materialize and test each model in DAG order.
-
-c.
-
-dbt build will first materialize your models, then test your sources, and then test your models.
-
 The correct answer is b. dbt build will first test your sources, then materialize and test each model in DAG order.
 
 How dbt build works under the hood
@@ -658,23 +507,6 @@ Why the other options are incorrect:
 a and c are incorrect: These options describe a linear approach (doing all of one action, then all of another). If dbt built all models before testing them (as in option c), a failure in a raw source or early staging model wouldn't stop bad data from being processed by all subsequent downstream models.
 
 Which command will run data tests only on sources?
-
-a.
-
-dbt test --select source:*
-
-b.
-
-dbt test --select _sources.yml
-
-c.
-
-dbt test --select staging/
-
-d.
-
-dbt source test 
-
 The correct answer is a. dbt test --select source:*
 
 Why this is correct:
@@ -830,6 +662,7 @@ b is incorrect: You do not need to reconfigure your source files manually. Using
 
 d is incorrect: Production environments absolutely support (and heavily rely on) commands like dbt test and dbt build to catch data quality anomalies before they reach end-user dashboards.
 
+---
 
 When does a dbt job run?
 Flexibility of dbt Jobs
