@@ -1,6 +1,8 @@
 # DBT
 
 --dbt project
+.sql - model - casts, logica etc
+.yml - schema - as tabelas e testes simples
 - deve ter arquivo .yml
 - é uma pasta, facil de copiar  e mover:
 - has all componentes needed to work with data within dbt
