@@ -24,7 +24,21 @@ exemplo de profile (profiles.yml) com 2 tiupos de deployment:
 - ls mostra os diretorios criados (analyses, dbt_project.yml macros, models, README.md, seeds, snapshots, testes)
 
 ## PROJECT PROFILE
--  defines where your database / data warehouse information is defined. 
+-  defines where your database / data warehouse information is defined.
+
+## MATERIALIZATION
+"A process is materialized" = transform src data and place the result in table or view // Colocar em uma tabela
+
+## TABLE VS VIEW
+- TABLE - OBject of database or warehouse - HOLDS data, takes memopry space - its content is updated ONLY if a specifi commands changes its data
+- VIEW - DO NOT HOLD data  - holds little space - select querry on a table/tables - responde: not saved, generated when querried
+
+## footsteps
+- DBT INIT - CREATE/COPY PROJECT
+- CREATE DATA DESTINATION IN profiles.yml - define/update configuration
+- DEFINE THE MODELS
+- DBT RUN model (transformed raw data) - dows data transofrmation and pushes it to warehouse -- use when model changes or process should be MATERIALIZED
+- VERIFY THE CONTENTS ON DATAWAREHOUSE
 
 # References
 DATACAMP - DBT FUNDAMENTALS
