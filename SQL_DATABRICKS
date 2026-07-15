@@ -1,1 +1,54 @@
 
+- data warehouses - Good for SQL workloads, bad for costs, is proprietary system and limits kind of work
+- data lakes - low cost, lack performance for BI workloads
+- lakehouse - unifification of all  data architectures containing all data workloads, performance  and gorvernance (colab enviro for all data team,s)  for BI  business oeprations - supports dat awarehouse archetectures and can migrate data marts etc 
+
+
+
+CATALOG
+---
+- volume: the data i create on volume can be managed volume (fiela re stored in a location  managed by UC) or external voluem (files stored in external location I  configure); 
+  - when creating a volume on catalog, chosen the schema, a folder will be created. The folder is the volume, in whicjh i can upload files etc 
+PARTNER CONNECT 
+---
+- ocnecta databricks com Power BI no botao Connect - baixa um arquivo que é dataset/ Power bi envia querries pro databricks sql warehouse, dando ao pbi a governanca, escalabildiade e performance do databricks sql warehouse (upload to this volume)
+
+DATABRICKS SQL 
+---
+- componentes unidos o formando - querries, SQL warehhouse, tables and views, dashs and visualizations
+  - querries - logic, which will be the used by the cluster
+  - sql warehouse - compute cluster to querries - (we need cluster to run the querries) - optimized for bi and sql workloads
+  - data storage - table (physical representation of dataset'written in delta lake format'acessed through unity catalog'partitioning and data sorting) and view (virtual tables, not physical/ come from wuerry results -  acessed through unity catalog/ materialized views store query results - incremental data processing, good for real-time analaytics and simplifying complex querries - E.G. RESULT OF COMPLEX JOINS OF TWO TABLES STORED FOR FASTER PERFORMANCE)
+  -   visualization (graphic representwtion of query result, created from a querry) and dashboard (combines visualizationS)  
+
+# BRINGIND DATA TO THE LAKE - FORMS OF INGESTION INTO LAKEHOUSE WITH DATABRICKS SQL 
+
+GUI-BASED DATA INGESTION - LAKEFLOW CONNECT, MANUAL UPLOAD
+(graphic user interface)
+LAKEFLOW CONNECT 
+---
+- water from the lake origintes from the source snowmelt, , water flows down a river, reaches lake as final destination. River is ingesting water  from the mountain and delivering it to the lake. 
+lakeflow is a ingestion solution, to integrate saas and databases to databricks lakehouse, for big-scale processes.
+
+MANUAL UPLOAD
+---
+- if there is no ingestion, we can upload files like csv and parquet manually too, and create a delta table, for small-scale processes that dont requitre lakefllow connect. 
+- cant uplaod databses, only files
+
+
+QUERRY BASED INGESTION - COPY INTO, AUTO LOADER
+COPY INTO - INGEST MANUALLY
+---
+- load large data from cloud storage, directly onto delta tables
+- good for static datasets (they dont change frequently) 
+e.g. - ingest a folder of parquet files, them create a delta table named *ias_table_parquet_files* - this ingestion was fast and efficient for bulk (the fodler) data
+copy into Ias_tabel_parquet_files  from path... fileformat = parquet  format_options=mergeschema=true, copy_options=mergeschema=true
+
+
+AUTO LOADER - INGEST AUTOMATICALLY
+---
+- for changind and dynamic datasets
+- Auto Loader processes each data file exactly once, and incrementally adds them to the target table.
+- auto loader will countinuously monitor a specific cloud storage location ->>if there is new file there, auto loader automatically ingests this new file, when it arrives
+e.g. - create table custoemrs_Ias as select * from path... 
+
