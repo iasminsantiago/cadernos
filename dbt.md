@@ -4,6 +4,8 @@
 .sql - model - casts, logica etc
 .yml - schema - as tabelas e testes simples
 
+---
+
 # EXTENSõES / TIPOS DE ARQUIVO
 ## .sql  -  transforma algo
 - Regras de Negócio: Filtrar clientes ativos, calcular faturamento, limpar textos.
@@ -51,7 +53,7 @@
 - Espaço para queries SQL analíticas que você quer rodar usando os recursos do dbt (como o {{ ref() }}), mas que você não quer que virem tabelas no banco de dados. É como um bloco de notas de consultas.
 
 
-
+---
 
 # OUTROS TOPICOS
 ## 🔌 Targets (Ambientes de Execução) -  Dev e Prod
@@ -68,7 +70,7 @@ O local físico (no Snowflake/BigQuery) criado pelo dbt dependendo do seu Target
  - Sempre priorizar Common Table Expression (CTEs) ao invés de subqueries
  - Possível forçar a adoção de um codestyle através de ferramentas como o sqlfluff
 
-## vresionamento
+## versionamento
 Comandos principais
 
 <img width="336" height="194" alt="image" src="https://github.com/user-attachments/assets/894e31ab-652c-4a09-8734-3ce9cf757ddb" />
@@ -129,7 +131,7 @@ Accepted_values
 - Baseado em uma coluna de data e um parâmetro definido pelo usuário de quão defasado essa data pode estar até os dados serem considerados desatualizados
 <img width="385" height="307" alt="image" src="https://github.com/user-attachments/assets/58a5cd28-0a89-4f43-8619-b0da5accc162" />
 
- 
+ ---
 
 ## MATERIALIZAÇõES DE DADOS
 ### TABELA 
@@ -146,13 +148,13 @@ Accepted_values
 <img width="304" height="107" alt="image" src="https://github.com/user-attachments/assets/8059ffc3-5ac0-42d0-a298-e7efaf20aaca" />
 <img width="714" height="402" alt="image" src="https://github.com/user-attachments/assets/c11ceab8-9f6c-4649-ab82-b1debf63a320" />
 
-## SNAPSHOT
+### SNAPSHOT
 - Utilizado para criação de SCDs tipo 2
 - Realiza uma comparação entre a tabela fonte e os novos dados carregados e mantém as alterações, definindo o intervalo em que as mudanças passaram a valer
 <img width="449" height="308" alt="image" src="https://github.com/user-attachments/assets/35aae723-73a4-42c9-8852-d409a6f304c9" />
 <img width="481" height="161" alt="image" src="https://github.com/user-attachments/assets/27ca77b2-61e7-49dd-af2c-7d04691eed6a" />
 
-## INCREMENTAL
+### INCREMENTAL
 - Tipo de materialização mais complexa
 - Processa apenas os dados que sofreram alterações, baseado em uma coluna de chave primária e uma coluna de data de atualização do registro
 INCREMENTAL: CUIDADOS
@@ -167,7 +169,7 @@ INCREMENTAL: CUIDADOS
 
 
 
-
+---
 
 ## YML
 - yet another markup language
