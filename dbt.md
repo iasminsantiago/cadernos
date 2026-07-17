@@ -53,7 +53,7 @@
 
 
 
-
+# OUTROS TOPICOS
 ## 🔌 Targets (Ambientes de Execução) -  Dev e Prod
 Configurados no arquivo profiles.yml. Dizem para ONDE o dbt vai apontar quando você rodar os comandos.
 - Dev (Desenvolvimento): Aponta para as credenciais e schemas de teste do analista
