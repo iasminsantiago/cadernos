@@ -178,6 +178,8 @@ Pipelines de ingestão de dados / DATA INGESTION PIPELINES
 - Connect - conecta fontes de dados
 - Declarative pipelines - facilita pipelines de dados 
 - Jobs - orquestraçào unificada para IA e analytics
+- <img width="1061" height="492" alt="image" src="https://github.com/user-attachments/assets/f97d7d3e-8ba9-403c-b1d6-4c477d720712" />
+
 
 - ---
 VIEWS
