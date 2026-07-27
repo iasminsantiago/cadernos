@@ -3,10 +3,154 @@
 - data lakes - low cost, lack performance for BI workloads
 - lakehouse - unifification of all  data architectures containing all data workloads, performance  and gorvernance (colab enviro for all data team,s)  for BI  business oeprations - supports dat awarehouse archetectures and can migrate data marts etc 
 
+---
+# Exemplo de uma empresa de insurance
+## Areas
+Account (Conta): O contrato da sua empresa com o Databricks.
+
+Workspace: O ambiente de trabalho onde você faz login, cria seus notebooks e roda seus clusters (máquinas de processamento).
+
+Catalog: A pasta de mais alto nível para organizar dados. Separa ambientes (ex: desenvolvimento, producao) ou áreas de negócio (ex: financas, sinistros).
+
+LUGAR DE TRABALHAR (Workspace) 
+LUGAR DE GUARDAR DADOS (Catálogos e Schemas).
+
+Schema (ou Database): Uma subpasta dentro do catálogo para agrupar coisas do mesmo assunto (ex: no catálogo seguros, você tem os schemas vendas, sinistros, clientes).
+
+Table: Dados estruturados (linhas e colunas) prontos para consulta SQL.
+
+View: Uma "tabela virtual" — é apenas uma consulta SQL salva. Não guarda dados físicos duplicados, apenas roda a regra quando chamada.
+
+Volume: Um diretório para guardar arquivos não estruturados ou brutos (PDFs de apólices, fotos de acidentes, arquivos CSV brutos, áudios de suporte).
+
+Imagine uma seguradora com 2 Workspaces: Engenharia de Dados e Ciência de Dados.
+
+Com Hive Metastore (Antigo):
+Se a Engenharia criasse a tabela claims, para a Ciência de Dados acessar, eles tinham que exportar os dados, configurar acessos manuais de rede ou duplicar a tabela. As permissões de quem podia ver os dados tinham que ser criadas duas vezes.
+Endereçamento 2 niveis  2 níveis: schema.tabela
+Local. Cada Workspace tem o seu Hive isolado.
+
+Com Unity Catalog (Novo):
+A Engenharia salva a tabela no caminho seguros.sinistros.tb_claims. O time de Ciência de Dados só abre o seu próprio Workspace, digita SELECT * FROM seguros.sinistros.tb_claims e pronto! O Unity Catalog checa se aquele cientista de dados tem permissão centralizada e libera o acesso na hora.
+Endereçamento 3 níveis: catalog.schema.tabela
+Global. Centralizado na conta, atende todos os Workspaces.
+Hoje (Unity Catalog): O Catálogo e o Schema ficam no nível da Conta (Account) do Databricks.
+
+Como funciona na prática: Vários Workspaces se conectam ao mesmo Unity Catalog. Assim, se o time de Vendas cria o catálogo vendas no Workspace A, o time de Finanças consegue enxergar e acessar o mesmo catálogo vendas no Workspace B (se tiver permissão).
+
+
+Se você rodar DELETE FROM claims WHERE id = 10: O Databricks não apaga o arquivo físico imediatamente. 
+
+Ele apenas grava no Log: "O registro 10 foi cancelado". As consultas passam a ignorar aquela linha. 
+O dado físico continua lá por um tempo por causa do recurso de Time Travel (voltar no tempo da tabela).
+
+Se você rodar DROP TABLE claims:
+
+Tabela Gerenciada (Managed): O Databricks apaga tanto o metadado quanto os arquivos físicos da nuvem. Tudo some!
+
+Tabela Externa (External): O Databricks apaga o registro no catálogo, mas os arquivos brutos no seu S3/Storage permanecem intactos.
+
+
+Exemplo Prático: O dia a dia de um Analista de Seguros
+Imagine que o analista precisa processar dados de um novo produto de seguro auto. Veja como ele interagiria com cada tipo:
+
+Caso A: Criando um Volume (Dados Brutos / PDFs)
+O analista recebeu uma pasta cheia de laudos de vistoria em PDF enviados pelos peritos.
+
+O que ele faz:
+
+SQL
+-- Criar um Volume para guardar os PDFs brutos
+CREATE VOLUME seguros.sinistros.vistorias_pdf;
+O arquivo: O arquivo físico permanece sendo o PDF original (vistoria_carro_123.pdf), armazenado no Volume sem nenhuma alteração de estrutura.
+
+Caso B: Criando uma Tabela (Dados Estruturados e Histórico)
+O analista lê os dados brutos de pagamentos de indenização do sistema legado e salva como uma Delta Table no Unity Catalog.
+
+O que ele faz (via SQL/PySpark):
+
+SQL
+CREATE TABLE seguros.sinistros.pagamentos AS
+SELECT id_sinistro, valor_pago, data_pagamento 
+FROM arquivo_csv_bruto;
+Atualizando via MERGE (Upsert):
+Chegaram correções de valores pagos. Em vez de recriar a tabela toda, o analista roda:
+
+SQL
+MERGE INTO seguros.sinistros.pagamentos AS target
+USING novos_dados_temp AS source
+ON target.id_sinistro = source.id_sinistro
+WHEN MATCHED THEN 
+  UPDATE SET target.valor_pago = source.valor_pago
+WHEN NOT MATCHED THEN 
+  INSERT (id_sinistro, valor_pago, data_pagamento) 
+  VALUES (source.id_sinistro, source.valor_pago, source.data_pagamento);
+O arquivo: Na nuvem, são gerados arquivos .parquet com a pasta _delta_log/.
+
+Caso C: Criando uma View (Regra de Negócio/Relatório)
+A diretoria quer ver apenas os sinistros que tiveram valor pago acima de R$ 50.000 (altos valores).
+
+O que ele faz:
+
+SQL
+CREATE VIEW seguros.sinistros.vw_sinistros_altos_valores AS
+SELECT * 
+FROM seguros.sinistros.pagamentos
+WHERE valor_pago > 50000;
+O arquivo: Não existe arquivo de dados novos para a View! Ela é só a instrução SQL salva no catálogo. Toda vez que alguém der SELECT * FROM vw_sinistros_altos_valores, o Databricks vai até a tabela pagamentos, aplica o filtro e mostra o resultado.
+
+
+3. Delta Table, Formatos, Logs e Views
+"Quando salvo uma Delta Table, crio do zero no Databricks?"
+Pode ser das duas formas:
+
+Do zero: Criando uma tabela vazia e inserindo dados via INSERT INTO.
+
+Transformando algo existente: Pegando um CSV bruto e salvando ele no formato Delta.
+
+"Tudo o que importamos vira Delta Table automaticamente?"
+Não automaticamente. Se você ler um arquivo CSV, ele continua sendo um CSV até você pedir expressamente para salvar no formato Delta (format("delta") ou CREATE TABLE ... USING DELTA).
+
+"Uma Delta Table usa só Parquet ou pode usar CSV?"
+O dado físico de uma Delta Table é SEMPRE Parquet.
+Uma Delta Table nada mais é do que: Arquivos Parquet + Pasta de logs (_delta_log). Ela não usa CSV como base física.
+
+"E se eu importar uma View?"
+Não existe "importar uma View".
+Uma View não tem arquivo físico nem log. Ela é apenas um comando SQL salvo (uma instrução).
+
+Se você deletar os dados da tabela original, a View para de funcionar.
+
+A View nunca vira uma Delta Table e não gera pasta _delta_log.
+
+"E o Volume?"
+O Volume é apenas um "atalho" ou apontador para uma pasta no seu armazenamento na nuvem. Se você colocar um PDF, um CSV ou um vídeo lá dentro, o arquivo continua exatamente no seu formato original. O Volume não transforma nada em Delta e não cria logs _delta_log.
+
+4. O Auto Loader sempre se conecta a um armazenamento externo?
+Sim! O Auto Loader (cloudFiles) serve justamente para "ficar de guarda" em uma pasta do armazenamento na nuvem (AWS S3, Azure Blob, etc.) ou em um Volume.
+
+Toda vez que um novo arquivo (seja CSV, JSON, Parque) cai nessa pasta monitorada, o Auto Loader detecta automaticamente e processa esse arquivo para dentro de uma tabela.
+
+
+O que é o Workspace? (Sua Mesa de Trabalho)Imagine o Workspace como a sala do escritório ou seu computador de trabalho.No Workspace você encontra:Notebooks: Onde você escreve seu código (Python, SQL, R).Workflows / Jobs: Os agendamentos para rodar códigos sozinhos (ex: "rode todo dia às 8h").Compute / Clusters: Os "motores/computadores" que você liga para processar o código.Dashboards: Os gráficos e relatórios visuais.💡 O Notebook FICA no Workspace! Você nunca guarda um Notebook dentro do Catálogo ou Schema. O Notebook é um arquivo de texto com código (tipo um script .py ou .sql), e ele fica salvo nas pastas do seu usuário dentro do Workspace.Quem tem qual Workspace?Uma empresa pode ter:Um Workspace único para todo mundo (Vendas, Finanças, TI).Ou Workspaces separados por área/time (ex: Workspace de Engenharia de Dados, Workspace do Time de Finanças).Exemplo do seu dia a dia:Você é de Finanças e entra no Workspace de Finanças. Na tela do seu computador (no Workspace), você abre um Notebook e liga um Cluster (computador virtual).Aí você digita:SQLSELECT * FROM vendas.pedidos.tb_faturamento;
+O que aconteceu aqui? O seu Notebook (no Workspace de Finanças) usou a permissão do Unity Catalog para ir lá no Catálogo vendas puxar os dados e mostrar na sua tela!2. O que são Catálogo e Schema? (As Prateleiras de Dados)Catálogo e Schema NÃO rodam código, não têm botões e não têm notebooks. Eles são apenas uma estrutura organizacional de gavetas para guardar dados (Tabelas, Views e Volumes).Plaintext[ SUAS FERRAMENTAS ] ──► Ficam no WORKSPACE (Notebooks, Scripts, Dashboards, Clusters)
+                                 │
+                                 │ (Executam consultas SQL)
+                                 ▼
+[ SEUS DADOS ]        ──► Ficam no UNITY CATALOG (Catálogos -> Schemas -> Tabelas/Views)
+O Unity Catalog fica "no meio", como uma central que conecta os Workspaces aos dados:Se você tem acesso ao Catálogo vendas, ele simplesmente aparece na barra lateral do seu Workspace para você clicar, ver quais tabelas existem e fazer consultas!3. Notebook vs. Consulta SQL (Query Dashboard)FerramentaO que é?Para que serve no dia a dia?NotebookUma página interativa dividida em células de código e texto.Para exploração, testes, pipelines complexos e juntar Python com SQL. Permite rodar bloco por bloco e ver o resultado na hora.SQL Query / EditorUma tela limpa focada apenas em comandos SQL rápidos.Para consultas pontuais ("Deixa eu ver o total de vendas de ontem") ou para montar Dashboards e gráficos rapidamente.4. Projeto com dbt: Onde foram parar as tabelas Bronze, Silver e Gold?Elas NÃO estão mais no SQL Server!Aqui está o caminho exato do que o seu projeto fez:Origem (SQL Server): O SQL Server serviu apenas como a fonte inicial (os dados brutos estavam lá).Ingestão: O Databricks (ou uma ferramenta de ingestão) foi lá no SQL Server, copiou os dados de lá e trouxe para o Databricks.Transformação com dbt: O dbt rodou os códigos SQL para estruturar em Bronze, Silver e Gold.Onde elas estão salvas AGORA?Logicamente: Elas estão dentro dos seus Catálogos e Schemas no Databricks (ex: Catálogo seguros, Schema bronze, Schema silver, Schema gold).Fisicamente: Elas viraram arquivos .parquet (Delta Tables) armazenados no bucket da nuvem (AWS S3, Azure Storage) associado à conta do Databricks da sua empresa.O SQL Server original nem sabe que a camada Gold existe! Ele continuou lá intacto, e agora os dados transformados vivem 100% no ecossistema do Databricks.
+
+---
+
+CATALOG
+---
+Separa ambientes (ex: desenvolvimento, producao) ou áreas de negócio (ex: financas, sinistros)
 
 
 CATALOG
 ---
+subpasta dentro do catálogo para agrupar coisas do mesmo assunto (ex: no catálogo seguros, você tem os schemas vendas, sinistros, clientes).
+
 - volume: the data i create on volume can be managed volume (fiela re stored in a location  managed by UC) or external voluem (files stored in external location I  configure); 
   - when creating a volume on catalog, chosen the schema, a folder will be created. The folder is the volume, in whicjh i can upload files etc 
 PARTNER CONNECT 
